@@ -1,0 +1,9 @@
+{
+  "name": "bgk-bot",
+  "version": "1.0.0",
+  "description": "Meu bot de WhatsApp",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}
