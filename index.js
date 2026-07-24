@@ -1,3 +1,5 @@
+const menu = require("./commands/menu");
+
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -16,6 +18,21 @@ async function iniciarBot() {
   });
 
   sock.ev.on("creds.update", saveCreds);
+  
+  sock.ev.on("messages.upsert", async ({ messages }) => {
+  const msg = messages[0];
+
+  if (!msg.message) return;
+
+  const texto =
+    msg.message.conversation ||
+    msg.message.extendedTextMessage?.text ||
+    "";
+
+  if (texto.trim().toLowerCase() === "7menu") {
+    await menu(sock, msg);
+  }
+});
 
   if (!state.creds.registered) {
     const numero = "5544988041262";
