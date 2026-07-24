@@ -5,12 +5,6 @@ const {
 } = require("@whiskeysockets/baileys");
 
 const pino = require("pino");
-const readline = require("readline");
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
 
 async function iniciarBot() {
   const { state, saveCreds } = await useMultiFileAuthState("auth_info");
@@ -29,12 +23,13 @@ async function iniciarBot() {
     setTimeout(async () => {
       try {
         const codigo = await sock.requestPairingCode(numero);
+
         console.log("=================================");
         console.log("CÓDIGO DE VINCULAÇÃO DO BGK BOT:");
         console.log(codigo);
         console.log("=================================");
       } catch (erro) {
-        console.log("Erro ao gerar código:", erro);
+        console.log("❌ Erro ao gerar código:", erro);
       }
     }, 3000);
   }
@@ -45,14 +40,17 @@ async function iniciarBot() {
     }
 
     if (connection === "close") {
+      const codigoErro =
+        lastDisconnect?.error?.output?.statusCode;
+
       const deveReconectar =
-        lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
+        codigoErro !== DisconnectReason.loggedOut;
 
       if (deveReconectar) {
-        console.log("🔄 Reconectando...");
+        console.log("🔄 Conexão perdida. Reiniciando...");
         iniciarBot();
       } else {
-        console.log("❌ WhatsApp desconectado.");
+        console.log("❌ Sessão encerrada. Será necessário vincular novamente.");
       }
     }
   });
