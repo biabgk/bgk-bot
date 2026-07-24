@@ -1,5 +1,12 @@
 const menu = require("./commands/menu");
 
+const http = require("http");
+
+http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end("BGK BOT ONLINE");
+}).listen(process.env.PORT || 3000);
+
 const {
   default: makeWASocket,
   useMultiFileAuthState,
